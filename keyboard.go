@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gdamore/tcell/v2"
 )
 
@@ -85,20 +87,13 @@ func (c *Display) handleKeyPress(op typeOperation) {
 		}
 	case tcell.KeyBackspace:
 		{
+			log.Print("backspace")
 			c.remove()
 		}
-
-	case tcell.KeyBackspace2:
-		{
-			c.remove()
-		}
-
-	// TODO remove as delete right from the cursor
-	// case tcell.KeyBS:
-	// case tcell.KeyDEL:
 	case tcell.KeyDelete:
 		{
-			c.remove()
+			log.Print("delete")
+			c.delete()
 		}
 	case tcell.KeyCtrlF:
 		{

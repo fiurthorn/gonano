@@ -1,4 +1,6 @@
-gonano
+gonano*
 log
 testfile*
+
 vendor/
+.vscode/

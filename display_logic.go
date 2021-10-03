@@ -25,7 +25,6 @@ func (c *Display) insert(char rune) {
 	})
 }
 
-// TODO remove as delete right from the cursor
 func (c *Display) remove() {
 	if c.getCurrentEl().pos == 0 {
 		if !c.hasPrevEl() {
@@ -48,6 +47,28 @@ func (c *Display) remove() {
 	} else {
 		oneCharOperation(c, func() {
 			c.getCurrentEl().pos--
+			c.getCurrentEl().data = removeFromSlice(c.getCurrentEl().data, c.getCurrentEl().pos)
+		})
+	}
+}
+
+func (c *Display) delete() {
+	endPos := len(c.getCurrentEl().data)
+	if c.getCurrentEl().pos == endPos {
+		if !c.hasNextEl() {
+			return
+		}
+
+		// Remove next line
+		p := c.currentElement
+		p.Value.(*Line).data = append(p.Value.(*Line).data, c.getNextEl().data...)
+		c.data.Remove(c.currentElement.Next())
+		c.recalcBelow(c.currentElement)
+
+		// Fix Y!
+		c.resyncBelow(c.data.Front())
+	} else {
+		oneCharOperation(c, func() {
 			c.getCurrentEl().data = removeFromSlice(c.getCurrentEl().data, c.getCurrentEl().pos)
 		})
 	}
