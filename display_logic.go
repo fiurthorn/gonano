@@ -1,5 +1,7 @@
 package main
 
+import "strconv"
+
 func oneCharOperation(c *Display, f func()) {
 	oldH := c.getCurrentEl().getOnScreenLineEndingY()
 	oldCursorY := c.getCurrentEl().getRelativeCursorY()
@@ -19,10 +21,12 @@ func oneCharOperation(c *Display, f func()) {
 }
 
 func (c *Display) insert(char rune) {
-	oneCharOperation(c, func() {
-		c.getCurrentEl().data = insertInSlice(c.getCurrentEl().data, char, c.getCurrentEl().pos)
-		c.getCurrentEl().pos++
-	})
+	if strconv.IsPrint(char) {
+		oneCharOperation(c, func() {
+			c.getCurrentEl().data = insertInSlice(c.getCurrentEl().data, char, c.getCurrentEl().pos)
+			c.getCurrentEl().pos++
+		})
+	}
 }
 
 func (c *Display) remove() {
