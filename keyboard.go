@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/v2"
 )
 
 func (c *Display) getBlinkerX() int {
@@ -83,7 +83,20 @@ func (c *Display) handleKeyPress(op typeOperation) {
 				c.resyncBelow(c.currentElement.Prev())
 			}
 		}
-	case tcell.KeyDEL:
+	case tcell.KeyBackspace:
+		{
+			c.remove()
+		}
+
+	case tcell.KeyBackspace2:
+		{
+			c.remove()
+		}
+
+	// TODO remove as delete right from the cursor
+	// case tcell.KeyBS:
+	// case tcell.KeyDEL:
+	case tcell.KeyDelete:
 		{
 			c.remove()
 		}

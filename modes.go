@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/v2"
 )
 
 type mode interface {
@@ -26,7 +26,7 @@ func (m normalMode) init() {
 
 func (m normalMode) handleKeyPress(ev keyEvent, resp chan bool) (exit bool) {
 	if ev.k == tcell.KeyCtrlQ {
-		if m.e.modified == false {
+		if !m.e.modified {
 			// Exit the editor
 			return true
 		}

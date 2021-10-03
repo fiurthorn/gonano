@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/gdamore/tcell"
+	"github.com/gdamore/tcell/v2"
 )
 
 func TestBasic1(t *testing.T) {

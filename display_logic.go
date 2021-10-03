@@ -25,6 +25,7 @@ func (c *Display) insert(char rune) {
 	})
 }
 
+// TODO remove as delete right from the cursor
 func (c *Display) remove() {
 	if c.getCurrentEl().pos == 0 {
 		if !c.hasPrevEl() {
