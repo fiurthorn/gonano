@@ -17,7 +17,7 @@ func (s *physicalStatusBar) draw(text []string) {
 	w := s.d.getWidth()
 
 	for i := 0; i < w; i++ {
-		s.d.screen.putStr(i, h-1-len(text), '=')
+		s.d.screen.putStr(i, h-1-len(text), '—')
 	}
 	for i := 0; i < len(text); i++ {
 		for j, c := range text[i] {
