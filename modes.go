@@ -79,13 +79,14 @@ func (m savedMode) init() {
 		// Show somewhere?
 		return
 	}
+
 	m.e.modified = false
 	m.e.display.monitorChannel <- announcementOperation{text: []string{"Saved!"}}
 	go func() {
 		time.Sleep(3 * time.Second)
 		m.lock.Lock()
 		defer m.lock.Unlock()
-		if _, ok := m.e.mode.(savedMode); ok == true {
+		if _, ok := m.e.mode.(savedMode); ok {
 			m.e.setMode(normalMode{m.e})
 		}
 	}()
