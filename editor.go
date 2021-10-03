@@ -34,6 +34,7 @@ func (e *Editor) initData(filename string) {
 		return
 	}
 
+	// `(\r\n|\n|\r)`
 	fields := strings.Split(string(data), "\n")
 	for i, field := range fields {
 		if i == 0 {
@@ -53,6 +54,11 @@ func (e *Editor) initData(filename string) {
 func (e *Editor) saveData() error {
 	data := []rune{}
 	for it := e.display.data.Front(); it != nil; it = it.Next() {
+		if chars := len(it.Value.(*Line).data); chars == 0 &&
+			it == e.display.data.Back() {
+			continue
+		}
+
 		data = append(data, it.Value.(*Line).data...)
 		data = append(data, rune(10))
 	}
@@ -73,7 +79,7 @@ func (e *Editor) pollKeyboard(resp chan bool) {
 		switch t := ev.(type) {
 		case keyEvent:
 			exit := e.mode.handleKeyPress(t, resp)
-			if exit == true {
+			if exit {
 				return
 			}
 		case resizeEvent:
