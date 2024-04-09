@@ -1,14 +1,14 @@
-package main
+package nano
 
 import (
 	"container/list"
-	"log"
+	"fmt"
 
 	"github.com/gdamore/tcell/v2"
 )
 
-// Display ss
-type Display struct {
+// display ss
+type display struct {
 	data           *list.List // list of *Line
 	currentElement *list.Element
 	screen         screenHandler
@@ -18,63 +18,63 @@ type Display struct {
 	offsetY        int
 }
 
-func (c *Display) dump() {
-	log.Printf("Current: x:%v, y:%v", c.getBlinkerX(), c.getBlinkerY())
-	log.Printf("width :%v, height:%v", c.getWidth(), c.getHeight())
-	log.Println("Dumping lines:")
+func (c *display) dump() {
+	fmt.Printf("Current: x:%v, y:%v", c.getBlinkerX(), c.getBlinkerY())
+	fmt.Printf("width :%v, height:%v", c.getWidth(), c.getHeight())
+	fmt.Println("Dumping lines:")
 	for i, e := 0, c.data.Front(); e != nil; i, e = i+1, e.Next() {
 		l := e.Value.(*Line)
-		log.Printf("Line %v: data %v startY %v height %v pos %v", i, string(l.data), l.startingCoordY, l.calculateHeight(), l.pos)
+		fmt.Printf("Line %v: data %v startY %v height %v pos %v", i, string(l.data), l.startingCoordY, l.calculateHeight(), l.pos)
 	}
 }
 
-func (c *Display) getWidth() int {
+func (c *display) getWidth() int {
 	w, _ := c.screen.getSize()
 	return w
 }
 
-func (c *Display) getHeight() int {
+func (c *display) getHeight() int {
 	_, h := c.screen.getSize()
 	return h
 }
 
-func (c *Display) getCurrentEl() *Line {
+func (c *display) getCurrentEl() *Line {
 	return c.currentElement.Value.(*Line)
 }
 
-func (c *Display) hasPrevEl() bool {
+func (c *display) hasPrevEl() bool {
 	return c.currentElement.Prev() != nil
 }
 
-func (c *Display) getPrevEl() *Line {
+func (c *display) getPrevEl() *Line {
 	return c.currentElement.Prev().Value.(*Line)
 }
 
-func (c *Display) hasNextEl() bool {
+func (c *display) hasNextEl() bool {
 	return c.currentElement.Next() != nil
 }
 
-func (c *Display) getNextEl() *Line {
+func (c *display) getNextEl() *Line {
 	return c.currentElement.Next().Value.(*Line)
 }
 
-func createDisplay(handler screenHandler) *Display {
+func createDisplay(handler screenHandler) *display {
 	channel := make(chan contentOperation)
 	lst := list.New()
-	d := Display{screen: handler, data: lst, monitorChannel: channel}
+	d := display{screen: handler, data: lst, monitorChannel: channel}
 	lst.PushBack(d.newLine())
 	d.currentElement = lst.Back()
 	return &d
 }
 
-func (c *Display) close() {
+func (c *display) Close() {
 	c.screen.close()
 }
 
-func (c *Display) startLoop() {
-	for {
-		op := <-c.monitorChannel
+func (c *display) startLoop() {
+	for op := range c.monitorChannel {
 		c.blinker.clear()
+
 		switch decoded := op.(type) {
 		case typeOperation:
 			{

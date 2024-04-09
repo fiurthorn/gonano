@@ -1,10 +1,16 @@
-package main
+package nano
 
 import "time"
 
+type blinker interface {
+	refresh()
+	set()
+	clear()
+}
+
 type realBlinker struct {
 	blinkIsSet bool
-	d          *Display
+	d          *display
 }
 
 func (r *realBlinker) refresh() {
@@ -38,8 +44,8 @@ func (r *realBlinker) clear() {
 	r.d.screen.sync()
 }
 
-func initRealBlinker(e *Editor) blinker {
-	b := &realBlinker{d: e.display, blinkIsSet: false}
+func newBlinker(e *Editor) blinker {
+	b := &realBlinker{d: e.Display, blinkIsSet: false}
 	go func(c chan contentOperation) {
 		ticker := time.NewTicker(500 * time.Millisecond)
 		for {
@@ -47,7 +53,7 @@ func initRealBlinker(e *Editor) blinker {
 			b.blinkIsSet = !b.blinkIsSet
 			c <- blinkOperation{blink: b.blinkIsSet}
 		}
-	}(e.display.monitorChannel)
+	}(e.Display.monitorChannel)
 
 	return b
 }

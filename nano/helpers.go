@@ -1,4 +1,4 @@
-package main
+package nano
 
 func minOf(vars ...int) int {
 	min := vars[0]

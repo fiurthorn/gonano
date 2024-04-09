@@ -1,14 +1,14 @@
-package main
+package nano
 
 // Line structure
 type Line struct {
 	data           []rune
 	startingCoordY int
-	display        *Display
+	display        *display
 	pos            int
 }
 
-func (c *Display) newLine() *Line {
+func (c *display) newLine() *Line {
 	return &Line{
 		data:           []rune{},
 		startingCoordY: 0,

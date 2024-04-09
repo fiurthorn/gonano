@@ -1,4 +1,4 @@
-package main
+package nano
 
 import (
 	"fmt"
@@ -6,6 +6,24 @@ import (
 
 	"github.com/gdamore/tcell/v2"
 )
+
+type screenHandler interface {
+	putStr(x, y int, b rune)
+	clearStr(x, y int)
+	getSize() (int, int)
+	pollKeyPress() interface{}
+	close()
+	sync()
+}
+
+type keyEvent struct {
+	rn rune
+	// Instead copy-pasting and mapping all constants....
+	k tcell.Key
+}
+
+type resizeEvent struct {
+}
 
 type physicalScreenHandler struct {
 	screen tcell.Screen

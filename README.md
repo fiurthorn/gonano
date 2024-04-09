@@ -4,8 +4,9 @@
 
 Text editor that mimicks the famous `nano`, written in go.
 
-*Usage:* gonano filename.txt
+_Usage:_ gonano filename.txt
 
-*Keyboard shortcuts*:
-+ Save: ctrl + w
-+ Exit: ctrl + q
+_Keyboard shortcuts_:
+
+- Save: ctrl + w
+- Exit: ctrl + q

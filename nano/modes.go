@@ -1,6 +1,7 @@
-package main
+package nano
 
 import (
+	"log"
 	"sync"
 	"time"
 
@@ -21,7 +22,7 @@ func newNormalMode(e *Editor) normalMode {
 }
 
 func (m normalMode) init() {
-	m.e.display.resyncBelow(m.e.display.data.Front())
+	m.e.Display.resyncBelow(m.e.Display.data.Front())
 }
 
 func (m normalMode) handleKeyPress(ev keyEvent, resp chan bool) (exit bool) {
@@ -37,7 +38,7 @@ func (m normalMode) handleKeyPress(ev keyEvent, resp chan bool) (exit bool) {
 		if ev.k != tcell.KeyLeft && ev.k != tcell.KeyRight && ev.k != tcell.KeyUp && ev.k != tcell.KeyDown {
 			m.e.modified = true
 		}
-		m.e.display.monitorChannel <- typeOperation{rn: ev.rn, key: ev.k, resp: resp}
+		m.e.Display.monitorChannel <- typeOperation{rn: ev.rn, key: ev.k, resp: resp}
 	}
 
 	return false
@@ -52,7 +53,7 @@ func newQuitWithoutSavingMode(e *Editor) quitWithoutSavingMode {
 }
 
 func (m quitWithoutSavingMode) init() {
-	m.e.display.monitorChannel <- announcementOperation{text: []string{"You will lose your changes!", "Are you sure you want to quit? Y/N"}}
+	m.e.Display.monitorChannel <- announcementOperation{text: []string{"You will lose your changes!", "Are you sure you want to quit? Y/N"}}
 }
 
 func (m quitWithoutSavingMode) handleKeyPress(ev keyEvent, resp chan bool) (exit bool) {
@@ -77,11 +78,12 @@ func newSavedMode(e *Editor) savedMode {
 func (m savedMode) init() {
 	if err := m.e.saveData(); err != nil {
 		// Show somewhere?
+		log.Printf("Error saving data: %v", err)
 		return
 	}
 
 	m.e.modified = false
-	m.e.display.monitorChannel <- announcementOperation{text: []string{"Saved!"}}
+	m.e.Display.monitorChannel <- announcementOperation{text: []string{"Saved!"}}
 	go func() {
 		time.Sleep(3 * time.Second)
 		m.lock.Lock()

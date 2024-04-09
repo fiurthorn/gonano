@@ -1,22 +1,20 @@
-package main
+package nano
 
 import (
-	"log"
-
 	"github.com/gdamore/tcell/v2"
 )
 
-func (c *Display) getBlinkerX() int {
+func (c *display) getBlinkerX() int {
 	blinkerX, _ := c.getCurrentEl().getRelativeBlinkerCoordsByPos()
 	return blinkerX
 }
 
-func (c *Display) getBlinkerY() int {
+func (c *display) getBlinkerY() int {
 	_, blinkerY := c.getCurrentEl().getRelativeBlinkerCoordsByPos()
 	return blinkerY + c.getCurrentEl().startingCoordY - c.offsetY
 }
 
-func (c *Display) handleKeyPress(op typeOperation) {
+func (c *display) handleKeyPress(op typeOperation) {
 	switch op.key {
 	case tcell.KeyLeft:
 		{
@@ -87,12 +85,10 @@ func (c *Display) handleKeyPress(op typeOperation) {
 		}
 	case tcell.KeyBackspace:
 		{
-			log.Print("backspace")
 			c.remove()
 		}
 	case tcell.KeyDelete:
 		{
-			log.Print("delete")
 			c.delete()
 		}
 	case tcell.KeyCtrlF:

@@ -1,14 +1,14 @@
-package main
+package nano
 
 type statusBar interface {
 	draw(text []string)
 }
 
 type physicalStatusBar struct {
-	d *Display
+	d *display
 }
 
-func newPhysicalStatusBar(d *Display) *physicalStatusBar {
+func newStatusBar(d *display) statusBar {
 	return &physicalStatusBar{d}
 }
 
