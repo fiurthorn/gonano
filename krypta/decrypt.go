@@ -2,6 +2,7 @@ package krypta
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -26,14 +27,20 @@ func (k *Krypta) DecryptFile(encrypted string) (content string, err error) {
 	defer f.Close()
 
 	armorReader := armor.NewReader(f)
-	r, err := age.Decrypt(armorReader, k.identities...)
+	dec, err := age.Decrypt(armorReader, k.identities...)
 	if err != nil {
 		err = fmt.Errorf("failed to open encrypted file: %v", err)
 		return
 	}
 
+	gz, err := gzip.NewReader(dec)
+	if err != nil {
+		err = fmt.Errorf("failed to open gzip reader: %v", err)
+		return
+	}
+
 	out := &bytes.Buffer{}
-	if _, e := io.Copy(out, r); e != nil {
+	if _, e := io.Copy(out, gz); e != nil {
 		err = fmt.Errorf("failed to read encrypted file: %w", e)
 		return
 	}

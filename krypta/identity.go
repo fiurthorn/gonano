@@ -9,7 +9,7 @@ import (
 	"filippo.io/age/armor"
 )
 
-func ReadIdentityFile(filePath string) []age.Identity {
+func readIdentityFile(filePath string) []age.Identity {
 	file, err := os.Open(filePath)
 	if err != nil {
 		log.Fatalf("Failed to open private keys file: %v", err)
@@ -29,7 +29,7 @@ func ReadIdentityFile(filePath string) []age.Identity {
 	return identities
 }
 
-func ReadRecipient(filePath string) []age.Recipient {
+func readRecipient(filePath string) []age.Recipient {
 	file, err := os.Open(filePath)
 	if err != nil {
 		log.Fatalf("Failed to open private keys file: %v", err)

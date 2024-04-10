@@ -1,6 +1,7 @@
 package krypta
 
 import (
+	"compress/gzip"
 	"fmt"
 	"io"
 	"os"
@@ -17,20 +18,24 @@ func (k *Krypta) EncryptFile(encrypted string, reader io.Reader) (err error) {
 	}
 	defer f.Close()
 
-	armorWriter := armor.NewWriter(f)
-	defer armorWriter.Close()
+	armor := armor.NewWriter(f)
+	defer armor.Close()
 
-	w, e := age.Encrypt(armorWriter, k.recipients...)
+	enc, e := age.Encrypt(armor, k.recipients...)
 	if e != nil {
 		err = fmt.Errorf("failed to open encryption file: %w", e)
 		return
 	}
-	defer w.Close()
+	defer enc.Close()
 
-	if _, e := io.Copy(w, reader); err != nil {
+	gz := gzip.NewWriter(enc)
+
+	if _, e := io.Copy(gz, reader); err != nil {
 		err = fmt.Errorf("failed to write encrypted file: %w", e)
 		return
 	}
+	gz.Close()
+	enc.Close()
 
 	return
 }

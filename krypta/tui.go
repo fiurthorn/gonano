@@ -17,53 +17,12 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"runtime"
 
 	"filippo.io/age/armor"
 	"golang.org/x/term"
 )
-
-// l is a logger with no prefixes.
-var l = log.New(os.Stderr, "", 0)
-
-func printf(format string, v ...interface{}) {
-	l.Printf("age: "+format, v...)
-}
-
-func errorf(format string, v ...interface{}) {
-	l.Printf("age: error: "+format, v...)
-	l.Printf("age: report unexpected or unhelpful errors at https://filippo.io/age/report")
-	exit(1)
-}
-
-func warningf(format string, v ...interface{}) {
-	l.Printf("age: warning: "+format, v...)
-}
-
-func errorWithHint(error string, hints ...string) {
-	l.Printf("age: error: %s", error)
-	for _, hint := range hints {
-		l.Printf("age: hint: %s", hint)
-	}
-	l.Printf("age: report unexpected or unhelpful errors at https://filippo.io/age/report")
-	exit(1)
-}
-
-// If testOnlyPanicInsteadOfExit is true, exit will set testOnlyDidExit and
-// panic instead of calling os.Exit. This way, the wrapper in TestMain can
-// recover the panic and return the exit code only if it was originated in exit.
-var testOnlyPanicInsteadOfExit bool
-var testOnlyDidExit bool
-
-func exit(code int) {
-	if testOnlyPanicInsteadOfExit {
-		testOnlyDidExit = true
-		panic(code)
-	}
-	os.Exit(code)
-}
 
 // clearLine clears the current line on the terminal, or opens a new line if
 // terminal escape codes don't work.

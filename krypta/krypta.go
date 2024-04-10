@@ -9,7 +9,7 @@ type Krypta struct {
 
 func New() *Krypta {
 	return &Krypta{
-		identities: ReadIdentityFile(IdentitiesFile()),
-		recipients: ReadRecipient(RecipientsFile()),
+		identities: readIdentityFile(IdentitiesFile()),
+		recipients: readRecipient(RecipientsFile()),
 	}
 }
